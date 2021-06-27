@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Plataforma || Proyecto IOT</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.3.2/chart.js"></script>
+
+    <!--Función actualizar-->
+    <script type="text/javascript">
+    function actualizar(){location.reload(true);}
+    //Función para actualizar cada 5 segundos(5000 milisegundos)
+    setInterval("actualizar()",10000);
+     </script>
+  
+    <style>
+      body {
+        background: #ffc1dc;
+        background: linear-gradient(to right, #f8bbea, #fabfda);
+      }
+      .Estilo1 {font-size: 18px}
+    </style>
+
+    <%for(var i=0; i < coleccion.length; i++){
+      var ids = coleccion[i].id;
+      var temp= coleccion[i].Temperatura;
+      var hum = coleccion[i].Humedad;
+      var dis = coleccion[i].Distancia;
+      var cre = coleccion[i].Crecimiento;
+      var fec = coleccion[i].Fecha;
+    } %>
+
+</head>
+
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <a class="navbar-brand" href="/">DAGODI IOT</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+          <span class="navbar-toggler-icon"></span>
+        </button>
+      
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+          <ul class="navbar-nav mr-auto">
+            <li class="nav-item active">
+              <a class="nav-link" href="#">Home <span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Ayuda</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Registros</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="#">Acerca de</a>
+            </li>
+          </ul>
+          <form class="form-inline my-2 my-lg-0">
+            <input class="form-control mr-sm-2" type="search" placeholder="Search" aria-label="Search">
+            <button class="btn btn-success my-2 my-sm-0" type="submit">Search</button>
+          </form>
+        </div>
+      </nav>
+  
+    <div class="container">
+        <h1><center>Registro y graficacion de datos</center></h1>
+        <br>
+      <div class="col-md-12" style="height: 1650px; width: 600x;">
+        <div class="card" >
+          <canvas id="myChart" ></canvas>
+        </div>
+
+        <div class="card" >
+          <canvas id="seChart" ></canvas>
+        </div>
+
+        <div class="card" >
+          <canvas id="ThirdChart"></canvas>
+        </div>
+
+      </div> 
+
+      <!-- table-->
+      <div class="col-md-12">
+          <div class="card">
+            <div class="card-body">
+              <!-- table-bordered para remarcar el borde-->
+              <table class="table table-bordered table-hover">
+                <thead>
+                  <!-- Añade color al los encabezados-->
+                    <tr bgcolor= "00BFFF">
+                        <th><center>No.</center></th>
+                        <th><center>Temperatura</center></th>
+                        <th><center>Humedad</center></th>
+                        <th><center>Distancia</center></th>
+                        <th><center>Crecimiento</center></th>
+                        <th><center>Fecha</center></th>
+                    </tr>
+                </thead>
+                <tbody>
+                  <!-- mostrar datos mediante for-->
+                  <!-- <%= %> equivale a php en java-->
+                  <!--recorre i y se detiene cuando i sea menor a coleccion e incrementara i el contador-->
+                    <% for(var i = 0; i< coleccion.length; i++){ %>
+                        <tr bgcolor= "#E0FFFF">
+                            <td><center> <%= i+1 %> </center></td> <!--contador de registros-->
+                            <!-- genera el registro de los 
+                              datos del documento en mongo de acuerdo a sus variables-->
+                            <td><center> <%= coleccion[i].Temperatura %>  </center></td>
+                            <td><center> <%= coleccion[i].Humedad %> </center></td>
+                            <td><center> <%= coleccion[i].Distancia %> </center></td>
+                            <td><center> <%= coleccion[i].Crecimiento %> </center></td>
+                            <td><center> <%= coleccion[i].Fecha %>  </center></td>
+                        </tr>
+                   <% } %>
+                </tbody>
+             </table>
+            </div>
+          </div>
+      </div>
+      
+    </div>
+</body>
+
+<script>
+var val_id = "<%= ids %>";
+var val_1 = "<%= temp %>";
+var val_2 = "<%= hum %>";
+var val_3 = "<%= dis %>";
+var val_4 = "<%= cre%>";
+
+var ctx = document.getElementById('myChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Temperatura                                                                                                       Humedad'],
+        datasets: [{
+            label: 'Temperatura',
+            data: [val_1],
+            backgroundColor: [
+                'rgba(255, 99, 132, 0.2)',
+            ],
+            borderColor: [
+                'rgba(255, 99, 132, 1)',
+            ],
+            borderWidth: 1
+        },
+        {
+            label: 'Humedad',
+            data: [val_2],
+            backgroundColor: [
+                'rgba(54, 162, 235, 0.2)'
+            ],
+            borderColor: [
+                'rgba(54, 162, 235, 1)'
+            ],
+            borderWidth: 1
+        }
+      ]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+var ctx = document.getElementById('seChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'line',
+    data: {
+        labels: ['Distancia entre plantas'],
+        datasets: [{
+            label: 'Distancia',
+            data: [val_3],
+            backgroundColor: [
+                'rgba(153, 102, 255, 0.2)'
+            ],
+            borderColor: [
+                'rgba(153, 102, 255, 1)'
+            ],
+            borderWidth: 1
+        }]
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+
+var ctx = document.getElementById('ThirdChart').getContext('2d');
+var myChart = new Chart(ctx, {
+    type: 'bar',
+    data: {
+        labels: ['Crecimiento'],
+        datasets: [{
+            label: 'Crecimiento',
+            data: [val_4],
+            backgroundColor: [
+                'rgba(255, 159, 64, 0.2)'
+            ],
+            borderColor: [
+                'rgba(255, 159, 64, 1)'
+            ],
+            borderWidth: 1,
+        }],
+    },
+    options: {
+        scales: {
+            y: {
+                beginAtZero: true
+            }
+        }
+    }
+});
+</script>
+
+</html>
